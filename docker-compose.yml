@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  api_server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api_server
+    env_file:
+      - .env
+    command: >
+        bash -c "echo 'Applying migrations'
+        && python manage.py migrate
+        && echo 'Running dev server'
+        && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    stdin_open: true
+    tty: true
+  db_server:
+    image: postgres:13.6-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+volumes:
+  db_data:
