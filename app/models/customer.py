@@ -4,9 +4,14 @@ from .user import User
 
 
 class Customer(CreatedUpdatedMixin):
+    """
+    Seperate the customer from the user. In case extra information is needed like address, phone number, bank and card details
+    """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone = models.CharField(max_length=255)
-    address = models.CharField(max_length=255)
+    # The phone and address can be created as a separate model and linked to the customer. In case of N number of address and phone numbers,
+    phone = models.CharField(max_length=255, null=False, blank=True, default='')
+    address = models.CharField(max_length=255, null=False, blank=True, default='')
 
-    def __str__(self):
-        return self.name or super().__str__()
+    @property
+    def orders(self):
+        return self.customerproducthistory_set.all()

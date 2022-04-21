@@ -4,3 +4,4 @@ from app import models
 admin.site.register(models.Product)
 admin.site.register(models.Customer)
 admin.site.register(models.CustomerProductHistory)
+admin.site.register(models.User)
